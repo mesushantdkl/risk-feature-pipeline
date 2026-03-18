@@ -27,6 +27,8 @@ Python Generator → PostgreSQL (source) → ELT Sync → PostgreSQL (dest)
 
 ---
 
+![Airflow Pipeline](screenshots/airflow_pipeline.png)
+
 ## Tech Stack
 
 | Tool | Purpose |
