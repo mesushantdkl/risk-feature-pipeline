@@ -1,0 +1,12 @@
+risk_pipeline:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: postgres_dest
+      port: 5432
+      dbname: risk_dest
+      user: admin
+      password: password
+      schema: public
+      threads: 4

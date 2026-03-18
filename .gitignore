@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.env
+venv/
+.venv/
+
+# dbt
+dbt_project/target/
+dbt_project/logs/
+dbt_project/.user.yml
+
+# Airflow
+airflow/logs/
+airflow/*.db
+airflow/*.cfg
+
+# Docker
+*.log
+
+# Mac
+.DS_Store
+.AppleDouble
+
+# Credentials (never commit these)
+*.env
+secrets/

@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  postgres_source:
+    image: postgres:15
+    container_name: risk_postgres_source
+    environment:
+      POSTGRES_DB: risk_source
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5433:5432"
+    volumes:
+      - pg_source_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d risk_source"]
+      interval: 10s
+      retries: 5
+
+  postgres_dest:
+    image: postgres:15
+    container_name: risk_postgres_dest
+    environment:
+      POSTGRES_DB: risk_dest
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5434:5432"
+    volumes:
+      - pg_dest_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d risk_dest"]
+      interval: 10s
+      retries: 5
+
+  airflow:
+    image: apache/airflow:2.8.0
+    container_name: risk_airflow
+    environment:
+      - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://admin:password@postgres_dest:5432/risk_dest
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False
+      - AIRFLOW__WEBSERVER__SECRET_KEY=supersecretkey
+      - _AIRFLOW_DB_MIGRATE=true
+      - _AIRFLOW_WWW_USER_CREATE=true
+      - _AIRFLOW_WWW_USER_USERNAME=admin
+      - _AIRFLOW_WWW_USER_PASSWORD=admin
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./dbt_project:/opt/dbt
+    depends_on:
+      postgres_dest:
+        condition: service_healthy
+    command: standalone
+
+volumes:
+  pg_source_data:
+  pg_dest_data:

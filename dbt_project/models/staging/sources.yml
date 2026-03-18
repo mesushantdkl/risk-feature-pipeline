@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: risk_raw
+    database: risk_dest
+    schema: public
+    tables:
+      - name: raw_transactions

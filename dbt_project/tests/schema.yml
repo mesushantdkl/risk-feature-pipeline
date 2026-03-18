@@ -1,0 +1,24 @@
+version: 2
+
+models:
+  - name: stg_transactions
+    columns:
+      - name: transaction_id
+        tests:
+          - not_null
+          - unique
+      - name: amount
+        tests:
+          - not_null
+
+  - name: int_risk_scores
+    columns:
+      - name: risk_score
+        tests:
+          - not_null
+
+  - name: risk_feature_table
+    columns:
+      - name: feature_text
+        tests:
+          - not_null
